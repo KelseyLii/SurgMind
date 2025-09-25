@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML空白行问题分析与解决</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f4f6fa 0%, #e0e6f6 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #4a6cf7;
+            color: white;
+            padding: 25px 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            display: flex;
+            padding: 0;
+        }
+        
+        .problem, .solution {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        .problem {
+            background: #fff6f6;
+            border-right: 1px solid #ffe0e0;
+        }
+        
+        .solution {
+            background: #f6fff6;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #2d3748;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4a6cf7;
+        }
+        
+        h3 {
+            font-size: 1.4rem;
+            margin: 25px 0 15px;
+            color: #4a6cf7;
+        }
+        
+        .code-container {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 18px;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .code-comment {
+            color: #a0aec0;
+        }
+        
+        .problem-code {
+            border-left: 4px solid #fc8181;
+        }
+        
+        .solution-code {
+            border-left: 4px solid #68d391;
+        }
+        
+        .visual-demo {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .demo-box {
+            background: white;
+            padding: 15px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        
+        .problem-demo {
+            border-top: 30px solid #fed7d7;
+        }
+        
+        .solution-demo {
+            border-top: 30px solid #c6f6d5;
+        }
+        
+        .label {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .problem-label {
+            background: #fed7d7;
+            color: #c53030;
+        }
+        
+        .solution-label {
+            background: #c6f6d5;
+            color: #2f855a;
+        }
+        
+        ul {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .tip {
+            background: #ebf8ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #4a6cf7;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #2d3748;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .problem {
+                border-right: none;
+                border-bottom: 1px solid #ffe0e0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>HTML中&nbsp;导致的空白行问题</h1>
+            <p class="subtitle">分析与解决方案</p>
+        </header>
+        
+        <div class="content">
+            <div class="problem">
+                <h2>问题分析</h2>
+                
+                <div class="visual-demo">
+                    <span class="label problem-label">问题示例</span>
+                    <div class="demo-box problem-demo">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <!-- 这里模拟了原始代码中的问题 -->
+                    </div>
+                    <p>页面顶部出现不必要的空白</p>
+                </div>
+                
+                <h3>问题代码</h3>
+                <div class="code-container problem-code">
+                    <span class="code-comment">&lt;!-- 这是您代码中的问题部分 --&gt;</span><br>
+                    &lt;body&gt;<br>
+                    &nbsp;&nbsp;"&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; "<br>
+                    &nbsp;&nbsp;&lt;link rel="stylesheet" href="/dataset/popup.css"&gt;<br>
+                    &nbsp;&nbsp;<span class="code-comment">&lt;!-- 其他代码 --&gt;</span><br>
+                    &lt;/body&gt;
+                </div>
+                
+                <h3>问题原因</h3>
+                <ul>
+                    <li>多个连续的<code>&amp;nbsp;</code>（非换行空格）被直接放在<code>&lt;body&gt;</code>开始标签后</li>
+                    <li>浏览器将这些空格解释为文本节点，渲染为空白行</li>
+                    <li>这些空格没有包含在任何HTML元素内，导致布局问题</li>
+                    <li>双引号<code>"</code>也被当作文本内容渲染</li>
+                </ul>
+            </div>
+            
+            <div class="solution">
+                <h2>解决方案</h2>
+                
+                <div class="visual-demo">
+                    <span class="label solution-label">修复后效果</span>
+                    <div class="demo-box solution-demo">
+                        <!-- 空白已被正确移除 -->
+                        内容从页面顶部正常开始
+                    </div>
+                    <p>空白行已被移除，页面布局正常</p>
+                </div>
+                
+                <h3>修复方法</h3>
+                <div class="code-container solution-code">
+                    <span class="code-comment">&lt;!-- 修复后的代码 --&gt;</span><br>
+                    &lt;body&gt;<br>
+                    &nbsp;&nbsp;&lt;link rel="stylesheet" href="/dataset/popup.css"&gt;<br>
+                    &nbsp;&nbsp;<span class="code-comment">&lt;!-- 其他代码 --&gt;</span><br>
+                    &lt;/body&gt;
+                </div>
+                
+                <h3>解决步骤</h3>
+                <ul>
+                    <li>删除<code>&lt;body&gt;</code>开始标签后的所有多余<code>&amp;nbsp;</code>字符</li>
+                    <li>移除不必要的双引号<code>"</code>字符</li>
+                    <li>确保所有内容都包含在适当的HTML元素内</li>
+                    <li>使用CSS而不是空格来控制布局和间距</li>
+                </ul>
+                
+                <div class="tip">
+                    <strong>专业建议：</strong> 使用CSS的margin和padding属性来控制元素间距，而不是依赖HTML空格字符。
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 HTML问题诊断与解决方案 | 页面空白行问题修复演示</p>
+        </footer>
+    </div>
+</body>
+</html>
